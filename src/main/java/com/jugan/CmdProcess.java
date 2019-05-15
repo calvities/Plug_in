@@ -183,9 +183,6 @@ public class CmdProcess {
                     byte[] crc = Utilty.getInstance().int2Bytes(num,1);
                     byte[] len_type_success_crc = Utilty.concat(len_type_success,crc);
                     ack = len_type_success_crc;
-                    /*buf.writeByte(0);
-                    buf.writeByte(1);
-                    buf.writeByte(1);*/
                 } else {
                     byte[] fail = {(byte)0x01};
                     byte[] len_type_fail = Utilty.concat(len_type,fail);
@@ -194,9 +191,6 @@ public class CmdProcess {
                     byte[] crc = Utilty.getInstance().int2Bytes(num,1);
                     byte[] len_type_fail_crc = Utilty.concat(len_type_fail,crc);
                     ack = len_type_fail_crc;
-                   /* buf.writeByte(0);
-                    buf.writeByte(1);
-                    buf.writeByte(0);*/
                 }
                 return ack;
             }
@@ -215,16 +209,12 @@ public class CmdProcess {
     private void check(ObjectNode input) throws Exception {
         //获取源数据
         byte[] buf = input.get("request").binaryValue();
-
-        //System.out.println("数组值:"+ Utilty.parseByte2HexStr(buf));
-
         if (buf.length == 0) {
             this.isOk = this.FAIL;
             return;
         }
         int k = 0;
         byte[] bytes = new byte[buf.length - 2];//创建校验数组
-
         int crcByte;//给校验数组赋值
         for(crcByte = 0; crcByte < bytes.length; ++crcByte)
             bytes[crcByte] = buf[++k];
@@ -256,16 +246,16 @@ public class CmdProcess {
             String ver = paras.get("ver").asText();//获取ver
             String name = paras.get("name").asText();//获取name
             String type = paras.get("type").asText();//获取type
-            int seq = paras.get("seq").asInt();
-            String ndid = paras.get("ndid").asText();
-            String time = paras.get("time").asText();
-            JsonNode channelData = paras.get("channel");
+            int seq = paras.get("seq").asInt();//获取序列号
+            String ndid = paras.get("ndid").asText();//获取ID
+            String time = paras.get("time").asText();//获取下发命令时间
+            JsonNode channelData = paras.get("channel");//获取通道数组
             List<Channel> channelList = new ArrayList<>();
             for (Iterator channelElements = channelData.elements();channelElements.hasNext();){
                 JsonNode channel = (JsonNode)channelElements.next();
-                long chno = channel.get("chno").asLong();
-                String vt = channel.get("vt").asText();
-                String value = channel.get("value").asText();
+                long chno = channel.get("chno").asLong();//获取通道号
+                String vt = channel.get("vt").asText();//获取通道类型
+                String value = channel.get("value").asText();//获取通道值
                 //封装通道
                 Channel channels = new Channel();
                 channels.setChno(chno);
@@ -273,6 +263,7 @@ public class CmdProcess {
                 channels.setValue(value);
                 channelList.add(channels);
             }
+            //封装命令包
             JsonRoot root = new JsonRoot();
             root.setVer(ver);
             root.setName(name);
@@ -281,10 +272,6 @@ public class CmdProcess {
             root.setNdid(ndid);
             root.setTime(time);
             root.setChannel(channelList);
-
-
-
-
             return root;
         } catch (Exception e) {
             e.printStackTrace();
