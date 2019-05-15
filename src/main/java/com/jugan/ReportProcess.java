@@ -55,11 +55,12 @@ public class ReportProcess {
      */
     public ReportProcess(byte[] binaryData) {
        //检验crc8
-        cheak(binaryData);
+        this.cheak(binaryData);
 
         /*地址域*/
         this.addressField = Utilty.getInstance().bytes2Int(binaryData,0,1);
         this.ft = Utilty.getInstance().bytes2Int(binaryData, 3, 1);
+        //System.out.println("ft:"+this.ft);
        // System.out.println(this.ft);
         switch (ft){//根据帧类型进行判断
             case 1:
@@ -167,7 +168,7 @@ public class ReportProcess {
                 body.put("req", this.mid);
                 body.put("ndid",datas.getId());
                 body.put("time",Utilty.obtainByTime());
-                body.put("result", 0);
+                body.put("result", datas.getCode());
                 root.put("body", body);
                 datas = null;//清空集合
             }
@@ -248,13 +249,14 @@ public class ReportProcess {
     private Data analysisBy_2(byte[] buf) {
         Data data = new Data();
         int k = 5;//k从4时为payload部分
-
+        //System.out.println(Utilty.parseByte2HexStr(buf));
         /*ID*/
         byte[] id = new byte[16];
         for (int i = 0; i < id.length; i++)
             id[i] = buf[++k];
        // System.out.println(Utilty.parseByte2HexStr(id));
         data.setId(Utilty.hex2Str(Utilty.parseByte2HexStr(id)));
+        //System.out.println(data.getId());
         /*应答*/
         int code = buf[++k];
         data.setCode(code);
@@ -339,7 +341,7 @@ public class ReportProcess {
         byte[] cr = new byte[1];
         cr[0] = binaryData[binaryData.length - 1];
         int crcs = Integer.parseInt(Utilty.parseByte2HexStr(cr), 16);
-        System.out.println("校验值:" + crcByte + "\t\t\t实际值:" + crcs);
+        //System.out.println("校验值:" + crcByte + "\t\t\t实际值:" + crcs);
         //比较校验值
         if (crcByte == crcs) {
             this.isOk = this.SUCCESS;

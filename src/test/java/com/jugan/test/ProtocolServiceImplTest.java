@@ -49,26 +49,33 @@ public class ProtocolServiceImplTest {
     /**
      * 测试用例2：平台向设备下发控制命令:
      */
- /*   @Test
-    public void testEncodeIoTSendCommand() throws Exception {
-        ObjectNode CloudReqObjectNode = initCloudReqObjectNode();
-        System.out.println(CloudReqObjectNode.toString());
-        byte[] outputByte = protocolAdapter.encode(CloudReqObjectNode);
-        System.out.println("\ncloudReq output:" + parseByte2HexStr(outputByte));
-    }*/
+    @Test
+    public void node() throws  Exception{
+        String str = "{\"msgType\":\"cloudReq\",\"serviceId\":\"General\",\"cmd\":\"SetData\"," +
+                "\"paras\":{\"ver\":\"1.0\",\"name\":\"data\",\"type\":\"ntf\"," +
+                "\"data\":[{\"ndid\":\"0000000203000000\",\"time\":\"20190419152217\",\"channel\":[{\"chno\":0," +
+                "\"vt\":\"int\",\"value\":3624},{\"chno\":1,\"vt\":\"int\",\"value\":309},{\"chno\":2,\"vt\":\"int\"," +
+                "\"value\":0},{\"chno\":3,\"vt\":\"int\",\"value\":0},{\"chno\":4,\"vt\":\"int\",\"value\":0}," +
+                "{\"chno\":7,\"vt\":\"int\",\"value\":26},{\"chno\":8,\"vt\":\"int\",\"value\":15},{\"chno\":9," +
+                "\"vt\":\"int\",\"value\":161}]}]},\"hasMore\":0,\"mid\":154}";
+        ObjectNode node = (ObjectNode) new ObjectMapper().readTree(str);
+        byte[] outputByte = protocolAdapter.encode(node);
+        System.out.println("\ncloudReq output:" + Utilty.parseByte2HexStr(outputByte));
+    }
 
     /**
      * 测试用例3：设备对平台命令的应答消息 有命令短id
      * 设备应答消息:AA7201000107E0
      * @throws Exception
      */
-/*    @Test
+    @Test
     public void testDecodeDeviceResponseIoT() throws Exception {
-        byte[] deviceRspByte = initDeviceRspByte();//initDeviceReqByte();//
+        byte[] deviceRspByte = aaa();// initDeviceRspByte();//initDeviceReqByte();//
+       // System.out.println(Utilty.parseByte2HexStr(aaa()));
         ObjectNode objectNode = protocolAdapter.decode(deviceRspByte);
         String str = (objectNode == null) ? null:objectNode.toString();
         System.out.println("平台设备响应:" + str);
-    }*/
+    }
     /**
      * 测试用例4：平台收到设备的上报数据后对设备的应答，如果不需要应答则返回null即可
      * {
@@ -85,31 +92,12 @@ public class ProtocolServiceImplTest {
         byte[] deviceReqByte = initDeviceReqByte();
         ObjectNode cloudRspObjectNode = initCloudRspObjectNode(deviceReqByte);
         byte[] outputByte2 = protocolAdapter.encode(cloudRspObjectNode);
-        System.out.println("cloudRsp output:" + parseByte2HexStr(outputByte2));
+        System.out.println("cloudRsp output:" + Utilty.parseByte2HexStr(outputByte2));
     }
-    /**
-     * 把 byte类型数组转换成16进制的字符串
-     * @param buf
-     * @return
-     */
-    public static String parseByte2HexStr(byte[] buf) {
-        if (null == buf) {
-            return null;
-        }
 
-        StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < buf.length; i++) {
-            String hex = Integer.toHexString(buf[i] & 0xFF);
-            if (hex.length() == 1) {
-                hex = '0' + hex;
-            }
-            sb.append(hex.toUpperCase());
-        }
-        return sb.toString();
-    }
 
 private static byte[] aaa(){
-        byte[] buf = {(byte)0x00,(byte)0x00,(byte)0x36,(byte)0x02,(byte)0x00,(byte)0x9A,(byte)0x30,(byte)0x30,(byte)0x30,(byte)0x30,(byte)0x30,(byte)0x30,(byte)0x30,(byte)0x32,(byte)0x30,(byte)0x33,(byte)0x30,(byte)0x30,(byte)0x30,(byte)0x30,(byte)0x30,(byte)0x30,(byte)0x00,(byte)0x02,(byte)0x0E,(byte)0x28,(byte)0x01,(byte)0x02,(byte)0x01,(byte)0x35,(byte)0x02,(byte)0x02,(byte)0x00,(byte)0x00,(byte)0x03,(byte)0x02,(byte)0x00,(byte)0x00,(byte)0x04,(byte)0x02,(byte)0x00,(byte)0x00,(byte)0x07,(byte)0x02,(byte)0x00,(byte)0x1A,(byte)0x08,(byte)0x02,(byte)0x00,(byte)0x0F,(byte)0x09,(byte)0x02,(byte)0x00,(byte)0xA1,(byte)0x6D};
+        byte[] buf = {(byte)0x00,(byte)0x00,(byte)0x36,(byte)0x02,(byte)0x00,(byte)0x9A,(byte)0x30,(byte)0x30,(byte)0x30,(byte)0x30,(byte)0x30,(byte)0x30,(byte)0x30,(byte)0x38,(byte)0x30,(byte)0x31,(byte)0x30,(byte)0x30,(byte)0x30,(byte)0x30,(byte)0x30,(byte)0x30,(byte)0x00,(byte)0x01};
         return buf;
 }
 
@@ -367,19 +355,7 @@ private static byte[] aaa(){
         return  actualObj;
     }
 
-    @Test
-    public void node() throws  Exception{
-        String str = "{\"msgType\":\"cloudReq\",\"serviceId\":\"General\",\"cmd\":\"SetData\"," +
-                "\"paras\":{\"ver\":\"1.0\",\"name\":\"data\",\"type\":\"ntf\"," +
-                "\"data\":[{\"ndid\":\"0000000203000000\",\"time\":\"20190419152217\",\"channel\":[{\"chno\":0," +
-                "\"vt\":\"int\",\"value\":3624},{\"chno\":1,\"vt\":\"int\",\"value\":309},{\"chno\":2,\"vt\":\"int\"," +
-                "\"value\":0},{\"chno\":3,\"vt\":\"int\",\"value\":0},{\"chno\":4,\"vt\":\"int\",\"value\":0}," +
-                "{\"chno\":7,\"vt\":\"int\",\"value\":26},{\"chno\":8,\"vt\":\"int\",\"value\":15},{\"chno\":9," +
-                "\"vt\":\"int\",\"value\":161}]}]},\"hasMore\":0,\"mid\":154}";
-        ObjectNode node = (ObjectNode) new ObjectMapper().readTree(str);
-        byte[] outputByte = protocolAdapter.encode(node);
-        System.out.println("\ncloudReq output:" + parseByte2HexStr(outputByte));
-    }
+
 
     /**
      * 初始化：设备对平台的响应码流
@@ -389,14 +365,10 @@ private static byte[] aaa(){
         /*
          * 测试用例：有命令短mid 设备应答消息:AA7201000107E0
          */
-        byte[] byteDeviceRsp = new byte[12];
-        byteDeviceRsp[0] = (byte) 0xAA;
-        byteDeviceRsp[1] = (byte) 0x72;
-        byteDeviceRsp[2] = (byte) 0x01;
-        byteDeviceRsp[3] = (byte) 0x00;
-        byteDeviceRsp[4] = (byte) 0x01;
-        byteDeviceRsp[5] = (byte) 0x07;
-        byteDeviceRsp[6] = (byte) 0xE0;
+        byte[] byteDeviceRsp = {
+                (byte)0x01,(byte)0x00,(byte)0x20,(byte)0x02,(byte)0x30,(byte)0x30,(byte)0x30,(byte)0x30,(byte)0x30,(byte)0x30,(byte)0x30,(byte)0x38,(byte)0x30,(byte)0x31,(byte)0x30,(byte)0x30,(byte)0x30,(byte)0x30,(byte)0x30,(byte)0x30,(byte)0x00,(byte)0x32
+        };
+
         return byteDeviceRsp;
     }
 
