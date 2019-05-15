@@ -93,6 +93,7 @@ public class CmdProcess {
                 如果有其他控制命令，增加判断即可。
                 * */
                 if (this.cmd.equals("SetData")) {
+                    if (rootBean == null) return null;
                     StringBuilder sb = new StringBuilder();
                     int length = 0;//payload长度
                     for (Data data : rootBean.getData()){
@@ -247,48 +248,52 @@ public class CmdProcess {
      * @return
      */
     private JsonRootBean getRootBean(JsonNode paras){
-        //JsonNode paras = this.paras;
-        if (paras == null)
-            return null;
-        String ver = paras.get("ver").asText();//获取ver
-        String name = paras.get("name").asText();//获取name
-        String type = paras.get("type").asText();//获取type
-        JsonNode dataNode = paras.get("data");
-        List<Data> dataList = new ArrayList<>();
-        //jsonNode是一个数组使用elements()读取数组中的每个JsonNode
-        for (Iterator dataElements = dataNode.elements();dataElements.hasNext();){
-            JsonNode data = (JsonNode) dataElements.next();
-            String ndid = data.get("ndid").asText();
-            String time = data.get("time").asText();
-            JsonNode channelNode = data.get("channel");
-            //System.out.println("ndid:"+ndid+"\t\ttime:"+time);
-            List<Channel> channelList = new ArrayList<>();
-            for (Iterator channelElements = channelNode.elements();channelElements.hasNext();){
-                JsonNode channel = (JsonNode) channelElements.next();
-                long chno = channel.get("chno").asLong();
-                String vt = channel.get("vt").asText();
-                String value = channel.get("value").asText();
-                //System.out.println("chno:"+chno+"\t\tvt:"+vt+"\t\tvalue:"+value);
-                //封装通道
-                Channel channels = new Channel();
-                channels.setChno(chno);
-                channels.setVt(vt);
-                channels.setValue(value);
-                channelList.add(channels);
+        try {
+            //JsonNode paras = this.paras;
+            if (paras == null)  return null;
+            String ver = paras.get("ver").asText();//获取ver
+            String name = paras.get("name").asText();//获取name
+            String type = paras.get("type").asText();//获取type
+            JsonNode dataNode = paras.get("data");
+            List<Data> dataList = new ArrayList<>();
+            //jsonNode是一个数组使用elements()读取数组中的每个JsonNode
+            for (Iterator dataElements = dataNode.elements();dataElements.hasNext();){
+                JsonNode data = (JsonNode) dataElements.next();
+                String ndid = data.get("ndid").asText();
+                String time = data.get("time").asText();
+                JsonNode channelNode = data.get("channel");
+                //System.out.println("ndid:"+ndid+"\t\ttime:"+time);
+                List<Channel> channelList = new ArrayList<>();
+                for (Iterator channelElements = channelNode.elements();channelElements.hasNext();){
+                    JsonNode channel = (JsonNode) channelElements.next();
+                    long chno = channel.get("chno").asLong();
+                    String vt = channel.get("vt").asText();
+                    String value = channel.get("value").asText();
+                    //System.out.println("chno:"+chno+"\t\tvt:"+vt+"\t\tvalue:"+value);
+                    //封装通道
+                    Channel channels = new Channel();
+                    channels.setChno(chno);
+                    channels.setVt(vt);
+                    channels.setValue(value);
+                    channelList.add(channels);
+                }
+                //封装Data
+                Data datas = new Data();
+                datas.setNdid(ndid);
+                datas.setTime(time);
+                datas.setChannel(channelList);
+                dataList.add(datas);
             }
-            //封装Data
-            Data datas = new Data();
-            datas.setNdid(ndid);
-            datas.setTime(time);
-            datas.setChannel(channelList);
-            dataList.add(datas);
+            //封装JsonRootBean
+            JsonRootBean rootBean = new JsonRootBean();
+            rootBean.setVer(ver);
+            rootBean.setName(name);
+            rootBean.setType(type);
+            rootBean.setData(dataList);
+            return rootBean;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
-        //封装JsonRootBean
-        JsonRootBean rootBean = new JsonRootBean();
-        rootBean.setVer(ver);
-        rootBean.setName(name);
-        rootBean.setType(type);
-        rootBean.setData(dataList);
-        return rootBean;
     }
 }
