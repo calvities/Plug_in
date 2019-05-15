@@ -6,15 +6,23 @@ package com.jugan.entity.json;
 
 
 /**
+ * 下发命令的通道部分
  * @Author CL
  * @Date 2019/4/9-14:29
  */
 public class Channel {
 
+    /**
+     * 通道号
+     */
     private long chno;
-
+    /**
+     * 通道类型
+     */
     private String vt;
-
+    /**
+     * 通道值
+     */
     private String value;
 
     public long getChno() {

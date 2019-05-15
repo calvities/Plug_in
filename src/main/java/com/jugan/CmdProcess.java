@@ -1,16 +1,11 @@
 package com.jugan;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.jugan.ByteBufUtils;
 import com.jugan.entity.json.Channel;
-import com.jugan.entity.json.Data;
-import com.jugan.entity.json.JsonRootBean;
+import com.jugan.entity.json.JsonRoot;
 import com.jugan.tools.CrcByte;
 import com.jugan.tools.Utilty;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -24,6 +19,7 @@ public class CmdProcess {
     private String cmd = "SET_DEVICE_LEVEL";
     private int hasMore = 0;
     private int errcode = 0;
+    private boolean midExistent = false;
     private int mid = 0;
     private JsonNode paras;
     public int isOk;
@@ -31,7 +27,7 @@ public class CmdProcess {
     private final int FAIL = 0;//魔术变量
     /** * 通道号和数据长度所占字节长度 */
     private final int HEADLEN = 2;
-    JsonRootBean rootBean = null;
+    JsonRoot rootBean = null;
 
     public CmdProcess() { }
 
@@ -71,10 +67,11 @@ public class CmdProcess {
                 //此处需要考虑兼容性，如果没有传mId，则不对其进行编码
                 if (input.get("mid") != null) {
                     this.mid = input.get("mid").intValue();
+                    this.midExistent = true;
                 }
                 this.serviceId = input.get("serviceId").asText();//获取serviceId
-                this.cmd = input.get("cmd").asText();
-                this.paras = input.get("paras");
+                this.cmd = input.get("cmd").asText();//命令名
+                this.paras = input.get("paras");//命令
                 this.hasMore = input.get("hasMore").asInt();
                 this.rootBean = this.getRootBean(paras);
             }
@@ -96,54 +93,53 @@ public class CmdProcess {
                     if (rootBean == null) return null;
                     StringBuilder sb = new StringBuilder();
                     int length = 0;//payload长度
-                    for (Data data : rootBean.getData()){
-                        String id = Utilty.toAscii(data.getNdid());
-                        sb.append(id);
-                        length = length + id.length()/2;
-                        for (Channel channel : data.getChannel()){
-                            String type = channel.getVt().toLowerCase();
-                            long chnos = channel.getChno();
-                            switch (type){
-                                case "int":
-                                    sb.append(Utilty.parseByte2HexStr(chnos));
-                                    int valueInt = Integer.parseInt(channel.getValue());
-                                    byte[] bytes = Utilty.getInstance().int2Bytes(valueInt,2);
-                                    sb.append(Utilty.parseByte2HexStr(2));
-                                    sb.append(Utilty.parseByte2HexStr(bytes));
-                                    length = length + this.HEADLEN + 2;
-                                    break;
-                                case "float":
-                                    int headFloat = Utilty.generatorHead(chnos, type);// 通道号
-                                    sb.append(Utilty.parseByte2HexStr(headFloat));
-                                    float valueFloat = Float.parseFloat(channel.getValue());
-                                    byte[] floatByte = Utilty.float2byte(valueFloat);
-                                    sb.append(Utilty.parseByte2HexStr(4));//通道数据长度
-                                    sb.append(Utilty.parseByte2HexStr(floatByte));//通道数据
-                                    length = length + this.HEADLEN + 4;
-                                    break;
-                                case "octet":
-                                    int headOctet = Utilty.generatorHead(chnos, type);// 通道号
-                                    sb.append(Utilty.parseByte2HexStr(headOctet));
-                                    String valueOctet = Utilty.hex2Str(channel.getValue());
-                                    int octetLen = valueOctet.length() / 2;//计算通道长度
-                                    sb.append(Utilty.parseByte2HexStr(octetLen));//通道数据长度
-                                    sb.append(valueOctet);//通道数据
-                                    length = length + this.HEADLEN + octetLen;
-                                    break;
-                                case "str":
-                                    int headStr = Utilty.generatorHead(chnos, type);// 通道号
-                                    sb.append(Utilty.parseByte2HexStr(headStr));
-                                    String valueStr = Utilty.toAscii(channel.getValue());
-                                    int strLen = valueStr.length() / 2;//计算通道长度
-                                    sb.append(Utilty.parseByte2HexStr(strLen));//通道数据长度
-                                    sb.append(valueStr);//通道数据
-                                    System.out.println(valueStr);
-                                    length = length + this.HEADLEN + strLen;
-                                    break;
-                            }
+                    String id = Utilty.toAscii(rootBean.getNdid());
+                    sb.append(id);
+                    length = length + id.length()/2;
+                    for (Channel channel : rootBean.getChannel()){
+                        String type = channel.getVt().toLowerCase();
+                        long chnos = channel.getChno();
+                        switch (type){
+                            case "int":
+                                sb.append(Utilty.parseByte2HexStr(chnos));
+                                int valueInt = Integer.parseInt(channel.getValue());
+                                byte[] bytes = Utilty.getInstance().int2Bytes(valueInt,2);
+                                sb.append(Utilty.parseByte2HexStr(2));
+                                sb.append(Utilty.parseByte2HexStr(bytes));
+                                length = length + this.HEADLEN + 2;
+                                break;
+                            case "float":
+                                int headFloat = Utilty.generatorHead(chnos, type);// 通道号
+                                sb.append(Utilty.parseByte2HexStr(headFloat));
+                                float valueFloat = Float.parseFloat(channel.getValue());
+                                byte[] floatByte = Utilty.float2byte(valueFloat);
+                                sb.append(Utilty.parseByte2HexStr(4));//通道数据长度
+                                sb.append(Utilty.parseByte2HexStr(floatByte));//通道数据
+                                length = length + this.HEADLEN + 4;
+                                break;
+                            case "octet":
+                                int headOctet = Utilty.generatorHead(chnos, type);// 通道号
+                                sb.append(Utilty.parseByte2HexStr(headOctet));
+                                String valueOctet = Utilty.hex2Str(channel.getValue());
+                                int octetLen = valueOctet.length() / 2;//计算通道长度
+                                sb.append(Utilty.parseByte2HexStr(octetLen));//通道数据长度
+                                sb.append(valueOctet);//通道数据
+                                length = length + this.HEADLEN + octetLen;
+                                break;
+                            case "str":
+                                int headStr = Utilty.generatorHead(chnos, type);// 通道号
+                                sb.append(Utilty.parseByte2HexStr(headStr));
+                                String valueStr = Utilty.toAscii(channel.getValue());
+                                int strLen = valueStr.length() / 2;//计算通道长度
+                                sb.append(Utilty.parseByte2HexStr(strLen));//通道数据长度
+                                sb.append(valueStr);//通道数据
+                                //System.out.println(valueStr);
+                                length = length + this.HEADLEN + strLen;
+                                break;
                         }
                     }
-                   // System.out.println("length:" + length+"\t\tlen:"+String.valueOf(length+4));
+
+                    // System.out.println("length:" + length+"\t\tlen:"+String.valueOf(length+4));
                     //包长度(包长度 = 包长度的两个字节 + 包类型的一个字节 + payload长度 + CRC占得一个字节,
                     // 即 包长度 = 2(包长度) + 1(包类型长度) + 2(mid长度) + length(payload长度) + 1(CRC长度)
                     byte[] packetLength = Utilty.getInstance().int2Bytes(length+4,2);
@@ -151,10 +147,15 @@ public class CmdProcess {
                     byte[] pl_pt = Utilty.concat(packetLength,packetType);//包长度+包类型
 
                     byte[] byteMid = new byte[2];//mid
-                    if (Utilty.getInstance().isValidofMid(this.mid))
-                        byteMid = Utilty.getInstance().int2Bytes(this.mid, 2);
+                    if (this.midExistent) {//判断mid是否有
+                        if (Utilty.getInstance().isValidofMid(this.mid))
+                            byteMid = Utilty.getInstance().int2Bytes(this.mid, 2);
+                    }else {
+                        if (Utilty.getInstance().isValidofMid(rootBean.getSeq()))
+                            byteMid = Utilty.getInstance().int2Bytes(rootBean.getSeq(),2);
+                    }
                     byte[] payload = Utilty.strToByte(sb.toString());//数据部分
-                    byte[] mid_payload = Utilty.concat(byteMid,payload);//payload部分
+                    byte[] mid_payload = Utilty.concat(byteMid,payload);//payload部分 = 数据部分+mid部分
                     byte[] pl_pt_payload = Utilty.concat(pl_pt,mid_payload);//包长度+包类型+payload
                     //获取校验CRC8
                     int num = CrcByte.cal_crc_table(pl_pt_payload,pl_pt_payload.length);
@@ -247,50 +248,44 @@ public class CmdProcess {
      * @param paras 实际下发的部分
      * @return
      */
-    private JsonRootBean getRootBean(JsonNode paras){
+    private JsonRoot getRootBean(JsonNode paras){
         try {
+            //{"ver":"1.0","name":"cmd","type":"rqst","seq":12,"ndid":"0000000203000001","time":"20170101112233","channel":[{"chno":0,"vt":"int","value":1},{"chno":1,"vt":"float","value":2.0},{"chno":2,"vt":"int","value":30},{"chno":3,"vt":"str","value":"898601132512345"}]}
             //JsonNode paras = this.paras;
             if (paras == null)  return null;
             String ver = paras.get("ver").asText();//获取ver
             String name = paras.get("name").asText();//获取name
             String type = paras.get("type").asText();//获取type
-            JsonNode dataNode = paras.get("data");
-            List<Data> dataList = new ArrayList<>();
-            //jsonNode是一个数组使用elements()读取数组中的每个JsonNode
-            for (Iterator dataElements = dataNode.elements();dataElements.hasNext();){
-                JsonNode data = (JsonNode) dataElements.next();
-                String ndid = data.get("ndid").asText();
-                String time = data.get("time").asText();
-                JsonNode channelNode = data.get("channel");
-                //System.out.println("ndid:"+ndid+"\t\ttime:"+time);
-                List<Channel> channelList = new ArrayList<>();
-                for (Iterator channelElements = channelNode.elements();channelElements.hasNext();){
-                    JsonNode channel = (JsonNode) channelElements.next();
-                    long chno = channel.get("chno").asLong();
-                    String vt = channel.get("vt").asText();
-                    String value = channel.get("value").asText();
-                    //System.out.println("chno:"+chno+"\t\tvt:"+vt+"\t\tvalue:"+value);
-                    //封装通道
-                    Channel channels = new Channel();
-                    channels.setChno(chno);
-                    channels.setVt(vt);
-                    channels.setValue(value);
-                    channelList.add(channels);
-                }
-                //封装Data
-                Data datas = new Data();
-                datas.setNdid(ndid);
-                datas.setTime(time);
-                datas.setChannel(channelList);
-                dataList.add(datas);
+            int seq = paras.get("seq").asInt();
+            String ndid = paras.get("ndid").asText();
+            String time = paras.get("time").asText();
+            JsonNode channelData = paras.get("channel");
+            List<Channel> channelList = new ArrayList<>();
+            for (Iterator channelElements = channelData.elements();channelElements.hasNext();){
+                JsonNode channel = (JsonNode)channelElements.next();
+                long chno = channel.get("chno").asLong();
+                String vt = channel.get("vt").asText();
+                String value = channel.get("value").asText();
+                //封装通道
+                Channel channels = new Channel();
+                channels.setChno(chno);
+                channels.setVt(vt);
+                channels.setValue(value);
+                channelList.add(channels);
             }
-            //封装JsonRootBean
-            JsonRootBean rootBean = new JsonRootBean();
-            rootBean.setVer(ver);
-            rootBean.setName(name);
-            rootBean.setType(type);
-            rootBean.setData(dataList);
-            return rootBean;
+            JsonRoot root = new JsonRoot();
+            root.setVer(ver);
+            root.setName(name);
+            root.setType(type);
+            root.setSeq(seq);
+            root.setNdid(ndid);
+            root.setTime(time);
+            root.setChannel(channelList);
+
+
+
+
+            return root;
         } catch (Exception e) {
             e.printStackTrace();
             return null;

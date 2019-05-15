@@ -52,12 +52,12 @@ public class ProtocolServiceImplTest {
     @Test
     public void node() throws  Exception{
         String str = "{\"msgType\":\"cloudReq\",\"serviceId\":\"General\",\"cmd\":\"SetData\"," +
-                "\"paras\":{\"ver\":\"1.0\",\"name\":\"data\",\"type\":\"ntf\"," +
-                "\"data\":[{\"ndid\":\"0000000203000000\",\"time\":\"20190419152217\",\"channel\":[{\"chno\":0," +
-                "\"vt\":\"int\",\"value\":3624},{\"chno\":1,\"vt\":\"int\",\"value\":309},{\"chno\":2,\"vt\":\"int\"," +
-                "\"value\":0},{\"chno\":3,\"vt\":\"int\",\"value\":0},{\"chno\":4,\"vt\":\"int\",\"value\":0}," +
-                "{\"chno\":7,\"vt\":\"int\",\"value\":26},{\"chno\":8,\"vt\":\"int\",\"value\":15},{\"chno\":9," +
-                "\"vt\":\"int\",\"value\":161}]}]},\"hasMore\":0,\"mid\":154}";
+                "\"paras\":{\"ver\":\"1.0\",\"name\":\"data\",\"seq\":12,\"type\":\"ntf\"," +
+                "\"ndid\":\"0000000203000000\",\"time\":\"20190515175346\",\"channel\":[{\"chno\":0,\"vt\":\"int\"," +
+                "\"value\":3637},{\"chno\":1,\"vt\":\"int\",\"value\":267},{\"chno\":2,\"vt\":\"int\",\"value\":0}," +
+                "{\"chno\":3,\"vt\":\"int\",\"value\":0},{\"chno\":4,\"vt\":\"int\",\"value\":1},{\"chno\":7," +
+                "\"vt\":\"int\",\"value\":28},{\"chno\":8,\"vt\":\"int\",\"value\":4},{\"chno\":9,\"vt\":\"int\"," +
+                "\"value\":47}]},\"hasMore\":0,\"mid\":11}";
         ObjectNode node = (ObjectNode) new ObjectMapper().readTree(str);
         byte[] outputByte = protocolAdapter.encode(node);
         System.out.println("\ncloudReq output:" + Utilty.parseByte2HexStr(outputByte));
