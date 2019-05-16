@@ -8,24 +8,16 @@ package com.jugan.entity;
  */
 public class Channel {
 
-    /**
-     * 数据格式
-     */
+    /** * 数据格式 */
     private int chnoFormat;
 
-    /**
-     * 数据通道
-     */
+    /** * 数据通道 */
     private int chno;
 
-    /**
-     * 通道值
-     */
+    /** * 通道值 */
     private Object chnoData;
 
-    /**
-     * 数据格式
-     */
+    /** * 数据格式 */
     public int getChnoFormat() {
         return chnoFormat;
     }
@@ -33,9 +25,7 @@ public class Channel {
     public void setChnoFormat(int chnoFormat) {
         this.chnoFormat = chnoFormat;
     }
-    /**
-     * 数据通道
-     */
+    /** * 数据通道 */
     public int getChno() {
         return chno;
     }
@@ -44,10 +34,7 @@ public class Channel {
         this.chno = chno;
     }
 
-
-    /**
-     * 通道值
-     */
+    /** * 通道值 */
     public Object getChnoData() {
         return chnoData;
     }

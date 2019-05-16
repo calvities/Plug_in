@@ -16,9 +16,10 @@ public class CmdProcess {
     //private String identifier = "123";
     private String msgType = "deviceReq";
     private String serviceId = "General";
-    private String cmd = "SET_DEVICE_LEVEL";
+    private String cmd = "SetData";
     private int hasMore = 0;
     private int errcode = 0;
+    /** * 是否传入mid */
     private boolean midExistent = false;
     private int mid = 0;
     private JsonNode paras;
@@ -240,8 +241,6 @@ public class CmdProcess {
      */
     private JsonRoot getRootBean(JsonNode paras){
         try {
-            //{"ver":"1.0","name":"cmd","type":"rqst","seq":12,"ndid":"0000000203000001","time":"20170101112233","channel":[{"chno":0,"vt":"int","value":1},{"chno":1,"vt":"float","value":2.0},{"chno":2,"vt":"int","value":30},{"chno":3,"vt":"str","value":"898601132512345"}]}
-            //JsonNode paras = this.paras;
             if (paras == null)  return null;
             String ver = paras.get("ver").asText();//获取ver
             String name = paras.get("name").asText();//获取name
