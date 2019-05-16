@@ -10,7 +10,7 @@ package com.jugan.entity.json;
  * @Author CL
  * @Date 2019/4/9-14:29
  */
-public class Channel {
+public class ChannelCommand {
 
     /**
      * 通道号

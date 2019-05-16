@@ -2,8 +2,8 @@ package com.jugan;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.jugan.entity.json.Channel;
-import com.jugan.entity.json.JsonRoot;
+import com.jugan.entity.json.ChannelCommand;
+import com.jugan.entity.json.JsonRootCommand;
 import com.jugan.tools.CrcByte;
 import com.jugan.tools.Utilty;
 
@@ -28,7 +28,7 @@ public class CmdProcess {
     private final int FAIL = 0;//魔术变量
     /** * 通道号和数据长度所占字节长度 */
     private final int HEADLEN = 2;
-    JsonRoot rootBean = null;
+    JsonRootCommand rootBean = null;
 
     public CmdProcess() { }
 
@@ -97,13 +97,13 @@ public class CmdProcess {
                     String id = Utilty.toAscii(rootBean.getNdid());
                     sb.append(id);
                     length = length + id.length()/2;
-                    for (Channel channel : rootBean.getChannel()){
-                        String type = channel.getVt().toLowerCase();
-                        long chnos = channel.getChno();
+                    for (ChannelCommand channelCommand : rootBean.getChannelCommand()){
+                        String type = channelCommand.getVt().toLowerCase();
+                        long chnos = channelCommand.getChno();
                         switch (type){
                             case "int":
                                 sb.append(Utilty.parseByte2HexStr(chnos));
-                                int valueInt = Integer.parseInt(channel.getValue());
+                                int valueInt = Integer.parseInt(channelCommand.getValue());
                                 byte[] bytes = Utilty.getInstance().int2Bytes(valueInt,2);
                                 sb.append(Utilty.parseByte2HexStr(2));
                                 sb.append(Utilty.parseByte2HexStr(bytes));
@@ -112,7 +112,7 @@ public class CmdProcess {
                             case "float":
                                 int headFloat = Utilty.generatorHead(chnos, type);// 通道号
                                 sb.append(Utilty.parseByte2HexStr(headFloat));
-                                float valueFloat = Float.parseFloat(channel.getValue());
+                                float valueFloat = Float.parseFloat(channelCommand.getValue());
                                 byte[] floatByte = Utilty.float2byte(valueFloat);
                                 sb.append(Utilty.parseByte2HexStr(4));//通道数据长度
                                 sb.append(Utilty.parseByte2HexStr(floatByte));//通道数据
@@ -121,7 +121,7 @@ public class CmdProcess {
                             case "octet":
                                 int headOctet = Utilty.generatorHead(chnos, type);// 通道号
                                 sb.append(Utilty.parseByte2HexStr(headOctet));
-                                String valueOctet = Utilty.hex2Str(channel.getValue());
+                                String valueOctet = Utilty.hex2Str(channelCommand.getValue());
                                 int octetLen = valueOctet.length() / 2;//计算通道长度
                                 sb.append(Utilty.parseByte2HexStr(octetLen));//通道数据长度
                                 sb.append(valueOctet);//通道数据
@@ -130,7 +130,7 @@ public class CmdProcess {
                             case "str":
                                 int headStr = Utilty.generatorHead(chnos, type);// 通道号
                                 sb.append(Utilty.parseByte2HexStr(headStr));
-                                String valueStr = Utilty.toAscii(channel.getValue());
+                                String valueStr = Utilty.toAscii(channelCommand.getValue());
                                 int strLen = valueStr.length() / 2;//计算通道长度
                                 sb.append(Utilty.parseByte2HexStr(strLen));//通道数据长度
                                 sb.append(valueStr);//通道数据
@@ -239,7 +239,7 @@ public class CmdProcess {
      * @param paras 实际下发的部分
      * @return
      */
-    private JsonRoot getRootBean(JsonNode paras){
+    private JsonRootCommand getRootBean(JsonNode paras){
         try {
             if (paras == null)  return null;
             String ver = paras.get("ver").asText();//获取ver
@@ -249,28 +249,28 @@ public class CmdProcess {
             String ndid = paras.get("ndid").asText();//获取ID
             String time = paras.get("time").asText();//获取下发命令时间
             JsonNode channelData = paras.get("channel");//获取通道数组
-            List<Channel> channelList = new ArrayList<>();
+            List<ChannelCommand> channelCommandList = new ArrayList<>();
             for (Iterator channelElements = channelData.elements();channelElements.hasNext();){
                 JsonNode channel = (JsonNode)channelElements.next();
                 long chno = channel.get("chno").asLong();//获取通道号
                 String vt = channel.get("vt").asText();//获取通道类型
                 String value = channel.get("value").asText();//获取通道值
                 //封装通道
-                Channel channels = new Channel();
+                ChannelCommand channels = new ChannelCommand();
                 channels.setChno(chno);
                 channels.setVt(vt);
                 channels.setValue(value);
-                channelList.add(channels);
+                channelCommandList.add(channels);
             }
             //封装命令包
-            JsonRoot root = new JsonRoot();
+            JsonRootCommand root = new JsonRootCommand();
             root.setVer(ver);
             root.setName(name);
             root.setType(type);
             root.setSeq(seq);
             root.setNdid(ndid);
             root.setTime(time);
-            root.setChannel(channelList);
+            root.setChannelCommand(channelCommandList);
             return root;
         } catch (Exception e) {
             e.printStackTrace();

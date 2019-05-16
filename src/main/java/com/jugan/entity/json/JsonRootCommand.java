@@ -7,7 +7,7 @@ import java.util.List;
  * @Author CL
  * @Date 2019/5/15-17:05
  */
-public class JsonRoot {
+public class JsonRootCommand {
 
     /**
      * 版本号
@@ -36,7 +36,7 @@ public class JsonRoot {
     /**
      * 通道部分
      */
-    private List<Channel> channel;
+    private List<ChannelCommand> channelCommand;
 
     public String getVer() {
         return ver;
@@ -86,12 +86,12 @@ public class JsonRoot {
         this.time = time;
     }
 
-    public List<Channel> getChannel() {
-        return channel;
+    public List<ChannelCommand> getChannelCommand() {
+        return channelCommand;
     }
 
-    public void setChannel(List<Channel> channel) {
-        this.channel = channel;
+    public void setChannelCommand(List<ChannelCommand> channelCommand) {
+        this.channelCommand = channelCommand;
     }
 
 }
