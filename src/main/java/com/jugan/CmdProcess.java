@@ -102,26 +102,26 @@ public class CmdProcess {
                         long chnos = channelCommand.getChno();
                         switch (type){
                             case "int":
-                                sb.append(Utilty.parseByte2HexStr(chnos));
+                                sb.append(Utilty.parseByte2HexStr(chnos));// 通道号
                                 int valueInt = Integer.parseInt(channelCommand.getValue());
-                                byte[] bytes = Utilty.getInstance().int2Bytes(valueInt,2);
-                                sb.append(Utilty.parseByte2HexStr(2));
-                                sb.append(Utilty.parseByte2HexStr(bytes));
+                                byte[] bytes = Utilty.getInstance().int2Bytes(valueInt,2);//通道数据数组
+                                sb.append(Utilty.parseByte2HexStr(2));//通道数据长度
+                                sb.append(Utilty.parseByte2HexStr(bytes));//通道数据
                                 length = length + this.HEADLEN + 2;
                                 break;
                             case "float":
                                 int headFloat = Utilty.generatorHead(chnos, type);// 通道号
-                                sb.append(Utilty.parseByte2HexStr(headFloat));
-                                float valueFloat = Float.parseFloat(channelCommand.getValue());
-                                byte[] floatByte = Utilty.float2byte(valueFloat);
+                                sb.append(Utilty.parseByte2HexStr(headFloat));//通道号数组
+                                float valueFloat = Float.parseFloat(channelCommand.getValue());//通道数据值
+                                byte[] floatByte = Utilty.float2byte(valueFloat);//通道数据数组
                                 sb.append(Utilty.parseByte2HexStr(4));//通道数据长度
                                 sb.append(Utilty.parseByte2HexStr(floatByte));//通道数据
                                 length = length + this.HEADLEN + 4;
                                 break;
                             case "octet":
                                 int headOctet = Utilty.generatorHead(chnos, type);// 通道号
-                                sb.append(Utilty.parseByte2HexStr(headOctet));
-                                String valueOctet = Utilty.hex2Str(channelCommand.getValue());
+                                sb.append(Utilty.parseByte2HexStr(headOctet));//通道号数组
+                                String valueOctet = Utilty.hex2Str(channelCommand.getValue());//通道数据值
                                 int octetLen = valueOctet.length() / 2;//计算通道长度
                                 sb.append(Utilty.parseByte2HexStr(octetLen));//通道数据长度
                                 sb.append(valueOctet);//通道数据
@@ -129,12 +129,11 @@ public class CmdProcess {
                                 break;
                             case "str":
                                 int headStr = Utilty.generatorHead(chnos, type);// 通道号
-                                sb.append(Utilty.parseByte2HexStr(headStr));
-                                String valueStr = Utilty.toAscii(channelCommand.getValue());
+                                sb.append(Utilty.parseByte2HexStr(headStr));//通道号数组
+                                String valueStr = Utilty.toAscii(channelCommand.getValue());//通道数据值
                                 int strLen = valueStr.length() / 2;//计算通道长度
                                 sb.append(Utilty.parseByte2HexStr(strLen));//通道数据长度
                                 sb.append(valueStr);//通道数据
-                                //System.out.println(valueStr);
                                 length = length + this.HEADLEN + strLen;
                                 break;
                         }
