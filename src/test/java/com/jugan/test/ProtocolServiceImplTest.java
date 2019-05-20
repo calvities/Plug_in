@@ -60,7 +60,7 @@ public class ProtocolServiceImplTest {
                 "\"value\":47}]},\"hasMore\":0,\"mid\":11}";
         ObjectNode node = (ObjectNode) new ObjectMapper().readTree(str);
         byte[] outputByte = protocolAdapter.encode(node);
-        System.out.println("\ncloudReq output:" + Utilty.parseByte2HexStr(outputByte));
+        System.out.println("cloudReq output:" + Utilty.parseByte2HexStr(outputByte));
     }
 
     /**

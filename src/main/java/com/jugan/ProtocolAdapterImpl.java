@@ -13,7 +13,7 @@ public class ProtocolAdapterImpl implements IProtocolAdapter {
     // 厂商名称
     private static final String MANU_FACTURERID = "ZJJG";
     // 设备型号
-    private static final String MODEL = "BCYTBNBAA";
+    private static final String MODEL = "Common";
 
     @Override
     public String getManufacturerId() {
@@ -40,8 +40,7 @@ public class ProtocolAdapterImpl implements IProtocolAdapter {
             return demo.toByte();
         } catch (Exception e) {
             e.printStackTrace();
-            byte[] bufs = {(byte)0xAA,(byte)0x72,(byte)0x00,(byte)0x00,(byte)0x02};
-            return bufs;
+            return null;
         }
     }
 
