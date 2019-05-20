@@ -2,19 +2,22 @@
 <module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
   <component name="FacetManager">
     <facet type="Osmorc" name="OSGi">
-      <configuration manifestGenerationMode="OsmorcControlled" manifestLocation="" jarfileLocation="Smoke-ZJJG-BCYTBNBAA-1.0.0.jar" outputPathType="CompilerOutputPath" bndFileLocation="" bundlorFileLocation="" bundleActivator="" bundleSymbolicName="Smoke-ZJJG-BCYTBNBAA" bundleVersion="1.0.0" ignoreFilePattern="" useProjectDefaultManifestFileLocation="true" alwaysRebuildBundleJAR="false" doNotSynchronizeWithMaven="false">
+      <configuration manifestGenerationMode="OsmorcControlled" manifestLocation="" jarfileLocation="NBIoTDevice-ZJJG-Common-1.0.0.jar" outputPathType="CompilerOutputPath" bndFileLocation="" bundlorFileLocation="" bundleActivator="" bundleSymbolicName="NBIoTDevice-ZJJG-Common" bundleVersion="1.0.0" ignoreFilePattern="" useProjectDefaultManifestFileLocation="true" alwaysRebuildBundleJAR="false" doNotSynchronizeWithMaven="false">
         <additionalProperties>
           <property key="Bundle-RequiredExecutionEnvironment" value="J2SE-1.5" />
           <property key="Service-Component" value="OSGI-INF/*" />
           <property key="Import-Package" value="org.slf4j,org.slf4j.spi,org.apache.log4j.spi,com.huawei.m2m.cig.tup.modules.protocol_adapter,com.fasterxml.jackson.databind,com.fasterxml.jackson.databind.node" />
           <property key="Embed-Dependency" value="json-lib,slf4j-log4j12" />
-          <property key="Bundle-Name" value="Smoke-ZJJG-BCYTBNBAA" />
+          <property key="Bundle-Name" value="NBIoTDevice-ZJJG-Common" />
           <property key="Bundle-ClassPath" value=".,json-lib-2.4-jdk15.jar,slf4j-log4j12-1.7.6.jar" />
           <property key="Include-Resource" value="json-lib-2.4-jdk15.jar=$MAVEN_REPOSITORY$/net/sf/json-lib/json-lib/2.4/json-lib-2.4-jdk15.jar,slf4j-log4j12-1.7.6.jar=$MAVEN_REPOSITORY$/org/slf4j/slf4j-log4j12/1.7.6/slf4j-log4j12-1.7.6.jar" />
           <property key="Embedded-Artifacts" value="json-lib-2.4-jdk15.jar;g=&quot;net.sf.json-lib&quot;;a=&quot;json-lib&quot;;v=&quot;2.4&quot;;c=&quot;jdk15&quot;,slf4j-log4j12-1.7.6.jar;g=&quot;org.slf4j&quot;;a=&quot;slf4j-log4j12&quot;;v=&quot;1.7.6&quot;" />
         </additionalProperties>
         <additionalJARContents />
       </configuration>
+    </facet>
+    <facet type="osgiBundleFacet" name="OSGi Bundle">
+      <configuration />
     </facet>
   </component>
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">

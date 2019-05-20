@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.jugan</groupId>
     <!-- 请修改为你的编解码插件的名字，命名规范：设备类型-厂商ID-设备型号，例如：WaterMeter-Huawei-NBIoTDevice -->
-    <artifactId>Smoke-ZJJG-BCYTBNBAA</artifactId>
+    <artifactId>NBIoTDevice-ZJJG-Common</artifactId>
     <version>1.0.0</version>
     <!-- 请检查这里的值为bundle，不能为jar -->
     <packaging>bundle</packaging>
@@ -93,7 +93,7 @@
                         <Bundle-Activator></Bundle-Activator>
                         <Service-Component>OSGI-INF/*</Service-Component>
                         <!-- 请修改为你的编解码插件的名字，命名规范：设备类型-厂商ID-设备型号，例如：WaterMeter-Huawei-NBIoTDevice -->
-                        <Bundle-SymbolicName>Smoke-ZJJG-BCYTBNBAA</Bundle-SymbolicName>
+                        <Bundle-SymbolicName>NBIoTDevice-ZJJG-Common</Bundle-SymbolicName>
                         <Export-Package></Export-Package>
                         <!-- 有两种jar不需要的填到Import-Package，否则插件无法启动，这两种jar分别为：java.**开头的包；引用的是Embed-Dependency里面的jar -->
                         <Import-Package>
