@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.jugan.entity.json.ChannelCommand;
 import com.jugan.entity.json.JsonRootCommand;
+import com.jugan.tools.AnalysisData;
 import com.jugan.tools.CrcByte;
 import com.jugan.tools.Utilty;
 
@@ -48,7 +49,14 @@ public class CmdProcess {
             }
             * */
             if (msgType.equals("cloudRsp")) {
-                this.check(input);//校验crc8
+                //this.check(input);//校验crc8
+                //获取源数据
+                byte[] buf = input.get("request").binaryValue();
+                if (buf.length == 0) {
+                    this.isOk = this.FAIL;
+                    return;
+                }
+                this.isOk = new AnalysisData().getData(buf).getIsOk();
                 //在此组装ACK的值
                 this.errcode = input.get("errcode").asInt();
                 this.hasMore = input.get("hasMore").asInt();
@@ -206,7 +214,7 @@ public class CmdProcess {
      * @param input
      * @throws Exception
      */
-    private void check(ObjectNode input) throws Exception {
+   /* private void check(ObjectNode input) throws Exception {
         //获取源数据
         byte[] buf = input.get("request").binaryValue();
         if (buf.length == 0) {
@@ -231,7 +239,7 @@ public class CmdProcess {
             //System.out.println("下发:校验失败");
         }
 
-    }
+    }*/
 
     /**
      * 获得JsonRootBean对象
