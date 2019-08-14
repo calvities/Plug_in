@@ -43,7 +43,7 @@ public class Utilty {
     /**
      * int 转 byte
      *
-     * @param value 数值
+     * @param value  数值
      * @param length 转换成byte数组的长度
      * @return
      */
@@ -75,14 +75,16 @@ public class Utilty {
      * @param num 数值
      * @return 值
      */
-    public static long num2Hex(long num,int len) {
-        if(((num>>(len*8-1)) & 0x01) == 0x01)
-            return (num - (0x01<<(len*8)));
+    public static long num2Hex(long num, int len) {
+        if (((num >> (len * 8 - 1)) & 0x01) == 0x01) {
+            return (num - (0x01 << (len * 8)));
+        }
         return num;
     }
 
     /**
      * byte[]转int
+     *
      * @param bRefArr
      * @return
      */
@@ -99,6 +101,7 @@ public class Utilty {
 
     /**
      * int转16进制
+     *
      * @param number
      * @return
      */
@@ -112,8 +115,10 @@ public class Utilty {
         return sb.toString();
 
     }
+
     /**
      * Long转16进制
+     *
      * @param number
      * @return
      */
@@ -135,7 +140,9 @@ public class Utilty {
      * @return String
      */
     public static String parseByte2HexStr(byte[] buf) {
-        if (null == buf) return null;
+        if (null == buf) {
+            return null;
+        }
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < buf.length; i++) {
             String hex = Integer.toHexString(buf[i] & 0xFF);
@@ -178,8 +185,10 @@ public class Utilty {
      */
     public static String byteAsciiToString(byte[] buf) {
         char[] chars = new char[buf.length];
-        for (int i = 0; i < chars.length; i++)
-            chars[i] = (char) buf[i];//由byte转char
+        for (int i = 0; i < chars.length; i++) {
+            //由byte转char
+            chars[i] = (char) buf[i];
+        }
         return String.valueOf(chars);
     }
 
@@ -190,10 +199,13 @@ public class Utilty {
      * @return
      */
     public static String toAscii(String str) {
-        char[] chars = str.toCharArray();//转换成char[]
+        //转换成char[]
+        char[] chars = str.toCharArray();
         byte[] buf = new byte[chars.length];
-        for (int i = 0; i < buf.length; i++)
-            buf[i] = (byte) chars[i];//由char转byte
+        for (int i = 0; i < buf.length; i++) {
+            //由char转byte
+            buf[i] = (byte) chars[i];
+        }
         String ss = Utilty.parseByte2HexStr(buf);
         //System.out.println(ss);
         return ss;
@@ -202,6 +214,7 @@ public class Utilty {
 
     /**
      * float转换成byte[]
+     *
      * @param f
      * @return
      */
@@ -209,8 +222,9 @@ public class Utilty {
         // 把float转换为byte[]
         int fbit = Float.floatToIntBits(f);
         byte[] b = new byte[4];
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 4; i++) {
             b[i] = (byte) (fbit >> (24 - i * 8));
+        }
         // 翻转数组
         int len = b.length;
         // 建立一个与源数组元素类型相同的数组
@@ -220,14 +234,13 @@ public class Utilty {
         byte temp;
         // 将顺位第i个与倒数第i个交换
         for (int i = 0; i < len / 2; ++i) {
+
             temp = dest[i];
             dest[i] = dest[len - i - 1];
             dest[len - i - 1] = temp;
         }
         return dest;
     }
-
-
 
 
     /**
@@ -248,13 +261,19 @@ public class Utilty {
      * @return String
      */
     public static String toBinaryString(int num) {
-        String str = Integer.toBinaryString(num);//转二进制
-        char[] chars = str.toCharArray();//转char数组
-        if (chars.length != 8)
-            for (int i = 0; i < 8 - chars.length; i++)//不满8位时补零
+        //转二进制
+        String str = Integer.toBinaryString(num);
+        //转char数组
+        char[] chars = str.toCharArray();
+        if (chars.length != 8) {
+            for (int i = 0; i < 8 - chars.length; i++) {
+                //不满8位时补零
                 str = '0' + str;
+            }
+        }
         return str;
     }
+
     /**
      * 转二进制不满8位补零
      *
@@ -262,27 +281,34 @@ public class Utilty {
      * @return String
      */
     public static String toBinaryString(long num) {
-        String str = Long.toBinaryString(num);//转二进制
-        char[] chars = str.toCharArray();//转char数组
-        if (chars.length != 8)
-            for (int i = 0; i < 8 - chars.length; i++)//不满8位时补零
+        //转二进制
+        String str = Long.toBinaryString(num);
+        //转char数组
+        char[] chars = str.toCharArray();
+        if (chars.length != 8) {
+            for (int i = 0; i < 8 - chars.length; i++) {
+                //不满8位时补零
                 str = '0' + str;
+            }
+        }
         return str;
     }
 
 
-
     /**
      * 获得通道号
-     * @param head 通道号
+     *
+     * @param head   通道号
      * @param typeOf 类型
      * @return
      */
     public static int generatorHead(long head, String typeOf) {
-        String str = Utilty.toBinaryString(head);//取得二进制数
-        String numStr = str.substring(2);//除去前两个bit位
+        //取得二进制数
+        String str = Utilty.toBinaryString(head);
+        //除去前两个bit位
+        String numStr = str.substring(2);
         StringBuilder sb = new StringBuilder();
-        switch (typeOf){
+        switch (typeOf) {
             case "int":
                 sb.append("00");
                 break;
@@ -297,9 +323,11 @@ public class Utilty {
                 break;
         }
         sb.append(numStr);
-        int num = Integer.parseInt(sb.toString(),2);//转成10进制
+        //转成10进制
+        int num = Integer.parseInt(sb.toString(), 2);
         return num;
     }
+
     /**
      * 合并数组
      *
@@ -333,7 +361,6 @@ public class Utilty {
         accum = accum | (b[1] & 0xff) << 8;
         accum = accum | (b[2] & 0xff) << 16;
         accum = accum | (b[3] & 0xff) << 24;
-        //System.out.println(accum);
         return Float.intBitsToFloat(accum);
     }
 
@@ -360,18 +387,21 @@ public class Utilty {
     /**
      * 取出该数组实际的数据部分
      * 此方法不可用
+     *
      * @param data
      * @return
      */
     public static byte[] returnActualLength(byte[] data) {
         int i = 0;
         for (; i < data.length; i++) {
-            if (data[i] == '\0')
+            if (data[i] == '\0') {
                 break;
+            }
         }
         byte[] bytes = new byte[i];
-        for (int j = 0; j < bytes.length; j++)
+        for (int j = 0; j < bytes.length; j++) {
             bytes[j] = data[j];
+        }
         return bytes;
     }
 
@@ -379,20 +409,20 @@ public class Utilty {
     /**
      * 字符串转byte[]
      * (此项目适用)
+     *
      * @param str
      * @return
      */
-    public static byte[] strToByte(String str){
-        byte[] bytes = new byte[str.length()/2];
+    public static byte[] strToByte(String str) {
+        byte[] bytes = new byte[str.length() / 2];
         int j = 0;
-        for (int i = 0;i < bytes.length;i++){
-            int num = Integer.parseInt(str.substring(j,j+2),16);
-            bytes[i] = (byte)num;
-            j = j+2;
+        for (int i = 0; i < bytes.length; i++) {
+            int num = Integer.parseInt(str.substring(j, j + 2), 16);
+            bytes[i] = (byte) num;
+            j = j + 2;
         }
         return bytes;
     }
-
 
 
 }

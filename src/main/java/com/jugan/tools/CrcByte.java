@@ -1,10 +1,12 @@
 package com.jugan.tools;
 
 /**
+ * CRC8校验
  * @Author CL
  * @Date 2019/3/29-17:01
  */
 public class CrcByte {
+
     /* 生成多项式0x07（ x8 + x2 + x + 1）*/
     static byte crc_table[] = {
             (byte) 0x00, (byte) 0x07, (byte) 0x0E, (byte) 0x09, (byte) 0x1C, (byte) 0x1B, (byte) 0x12, (byte) 0x15, 
@@ -49,14 +51,18 @@ public class CrcByte {
      * @return 校验值
      */
     public static int cal_crc_table(byte[] ptr, int len) {
+
         byte crc = 0x00;
         int num = 0;
         while (len > 0) {
+
             byte i = (byte) (crc ^ ptr[num]);
             crc = crc_table[i & 0xFF];
             len--;
             num++;
+
         }
+
         int data = crc & 0xFF;
         return data;
     }

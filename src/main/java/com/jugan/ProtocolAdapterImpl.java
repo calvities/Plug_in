@@ -6,7 +6,11 @@ import com.jugan.tools.Utilty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
+/**
+ *
+ * @Author CL
+ * @Date 2019/4/15-17:05
+ */
 public class ProtocolAdapterImpl implements IProtocolAdapter {
 
     private static final Logger logger = LoggerFactory.getLogger(ProtocolAdapterImpl.class);
@@ -33,23 +37,33 @@ public class ProtocolAdapterImpl implements IProtocolAdapter {
         logger.info("Codec demo HttpMessageHander deactivated.");
     }
 
-    public byte[] encode(ObjectNode input) throws Exception {
+    @Override
+    public byte[] encode(ObjectNode input) {
+
         logger.info("dynamic lrbtest " + input.toString());
         try {
+
             CmdProcess demo = new CmdProcess(input);
             return demo.toByte();
+
         } catch (Exception e) {
+
             e.printStackTrace();
             return null;
         }
     }
 
-    public ObjectNode decode(byte[] binaryData) throws Exception {
+    @Override
+    public ObjectNode decode(byte[] binaryData) {
+
         try {
+
             ReportProcess lightProcess = new ReportProcess(binaryData);
             ObjectNode objectNode = lightProcess.toJsonNode();
             return objectNode;
+
         } catch (Exception e) {
+
             e.printStackTrace();
             return null;
         }

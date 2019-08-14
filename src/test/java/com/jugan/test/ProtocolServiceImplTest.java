@@ -1,7 +1,6 @@
 package com.jugan.test;
 
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.huawei.m2m.cig.tup.modules.protocol_adapter.IProtocolAdapter;
@@ -10,8 +9,12 @@ import com.jugan.tools.Utilty;
 import org.junit.Before;
 import org.junit.Test;
 
+
+
 /**
- * Unit test for simple App.
+ * 简单的测试单元
+ * @Author CL
+ * @Date 2019/4/15-17:05
  */
 public class ProtocolServiceImplTest {
 
