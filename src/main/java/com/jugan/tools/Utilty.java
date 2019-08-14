@@ -207,7 +207,6 @@ public class Utilty {
             buf[i] = (byte) chars[i];
         }
         String ss = Utilty.parseByte2HexStr(buf);
-        //System.out.println(ss);
         return ss;
     }
 
@@ -249,8 +248,10 @@ public class Utilty {
      * @return string类型的时间
      */
     public static String obtainByTime() {
-        SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");//设置日期格式
-        return df.format(new Date());// new Date()为获取当前系统时间
+        //设置日期格式
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+        // new Date()为获取当前系统时间
+        return df.format(new Date());
     }
 
 

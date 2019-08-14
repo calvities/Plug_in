@@ -2,7 +2,6 @@ package com.jugan;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.huawei.m2m.cig.tup.modules.protocol_adapter.IProtocolAdapter;
-import com.jugan.tools.Utilty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
